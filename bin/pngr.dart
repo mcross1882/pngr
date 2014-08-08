@@ -1,3 +1,8 @@
+/**
+ * pngr - A text-to-png encoder
+ *
+ * @author Matthew Cross <blacklightgfx@gmail.com>
+ */
 import 'dart:io';
 import 'package:image/image.dart';
 
@@ -9,7 +14,7 @@ const int DEFAULT_WIDTH = 200;
  * are then encoded into an image that is either 200
  * pixels long or the max length possible given the data
  */
-void encodeCsvToPng(List<int> bytes, String filename) {
+void encodeTextToPng(List<int> bytes, String filename) {
   int pixelCount = bytes.length ~/ BYTE_SIZE;
   int width = pixelCount < DEFAULT_WIDTH ? pixelCount : DEFAULT_WIDTH;
   int height = pixelCount ~/ width;
@@ -57,12 +62,16 @@ void main(List<String> arguments) {
   String inputFile = arguments[arguments.length-2];
   String outputFile = arguments[arguments.length-1];
 
+  if (!isEncoding && !inputFile.toLowerCase().endsWith(".png")) {
+    return print("The file being decoded must be a PNG image.");
+  }
+
   print("Converting ${inputFile} to ${outputFile}");
 
   try {
     new File(inputFile).readAsBytes()
     .then((List<int> bytes) {
-      isEncoding ? encodeCsvToPng(bytes, outputFile) : decodePngToString(bytes, outputFile);
+      isEncoding ? encodeTextToPng(bytes, outputFile) : decodePngToString(bytes, outputFile);
     });
   } catch (error, stackTrace) {
     print("Caught Exception: ${error}\n${stackTrace}");
