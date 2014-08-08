@@ -50,10 +50,10 @@ List<int> split4ByteInts(list) {
 
 void main(List<String> arguments) {
   if (arguments.length < 2) {
-    return print('Syntax: pnr [-d] [input] [output]');
+    return print('Syntax: pngr [--decode] [input] [output]');
   }
 
-  bool isEncoding = !arguments.contains('-d');
+  bool isEncoding = !arguments.contains('--decode');
   String inputFile = arguments[arguments.length-2];
   String outputFile = arguments[arguments.length-1];
 
@@ -67,5 +67,6 @@ void main(List<String> arguments) {
   } catch (error, stackTrace) {
     print("Caught Exception: ${error}\n${stackTrace}");
   }
+
   print("Finished!");
 }
