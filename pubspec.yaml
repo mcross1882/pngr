@@ -1,0 +1,4 @@
+name: pngr
+description: A sample command-line application
+dependencies:
+  image: any
