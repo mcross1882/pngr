@@ -1,10 +1,18 @@
 import 'dart:io';
-import 'dart:convert';
 import 'package:image/image.dart';
 
+const int BYTE_SIZE = 4;
+const int DEFAULT_WIDTH = 200;
+
+/**
+ * Takes a file and reads it in as bytes. These
+ * are then encoded into an image that is either 200
+ * pixels long or the max length possible given the data
+ */
 void encodeCsvToPng(List<int> bytes, String filename) {
-  int width = 20;
-  int height = bytes.length ~/ 200;
+  int pixelCount = bytes.length ~/ BYTE_SIZE;
+  int width = pixelCount < DEFAULT_WIDTH ? pixelCount : DEFAULT_WIDTH;
+  int height = pixelCount ~/ width;
 
   if (height <= 0) {
     height = 1;
@@ -15,13 +23,18 @@ void encodeCsvToPng(List<int> bytes, String filename) {
   new File(filename).writeAsBytesSync(encodePng(imageToRender));
 }
 
+/**
+ * Decodes the image data from the PNG image
+ */
 void decodePngToString(List<int> bytes, String filename) {
   Image image = decodePng(bytes);
-
-  print(UTF8.decode(split4ByteInt(image.data)));
+  new File(filename).writeAsBytesSync(split4ByteInts(image.data));
 }
 
-List<int> split4ByteInt(list) {
+/**
+ * Splits an encoded PNG byte into individual runes (characters)
+ */
+List<int> split4ByteInts(list) {
   var result = new List<int>();
   list.forEach((byte) {
     result.addAll([
@@ -36,7 +49,7 @@ List<int> split4ByteInt(list) {
 }
 
 void main(List<String> arguments) {
-  if (arguments.length < 3) {
+  if (arguments.length < 2) {
     return print('Syntax: pnr [-d] [input] [output]');
   }
 
@@ -44,13 +57,15 @@ void main(List<String> arguments) {
   String inputFile = arguments[arguments.length-2];
   String outputFile = arguments[arguments.length-1];
 
-  if (isEncoding) {
-    new File(inputFile).readAsBytes()
-      .then((List<int> bytes) => encodeCsvToPng(bytes, outputFile));
-  } else {
-    new File(inputFile).readAsBytes()
-      .then((List<int> bytes) => decodePngToString(bytes, outputFile));
-  }
+  print("Converting ${inputFile} to ${outputFile}");
 
+  try {
+    new File(inputFile).readAsBytes()
+    .then((List<int> bytes) {
+      isEncoding ? encodeCsvToPng(bytes, outputFile) : decodePngToString(bytes, outputFile);
+    });
+  } catch (error, stackTrace) {
+    print("Caught Exception: ${error}\n${stackTrace}");
+  }
   print("Finished!");
 }
