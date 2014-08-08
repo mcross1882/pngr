@@ -1,4 +1,7 @@
 name: pngr
-description: A sample command-line application
+version: 0.0.1
+author: Matthew Cross
+description: A text-to-png encoding application (it also support decoding as well)
+homepage: https://github.com/mcross1882/pngr
 dependencies:
   image: any
