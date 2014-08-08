@@ -1,2 +1,5 @@
-headerA,headerB,headerC
-"A Test Value","Another Test Value","Final TestValue"
+"id"	"first_name"	"last_name"
+1	"John"	"Doe"
+2	"Amy"	"Smith"
+3	"Samuel"	"Tooth"
+4	"Ben"	"Hammer"
